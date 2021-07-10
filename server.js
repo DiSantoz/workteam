@@ -12,9 +12,14 @@ const db = mysql.createConnection(
         user: process.env.DB_USER,
         password: process.env.DB_PW,
         database: process.env.DB_NAME
-    },
-    console.log('Connected to company database.')
+    }
 );
+
+db.connect(function (err) {
+    if (err) throw err
+    else console.log('Connected to the company database.')
+    team();
+})
 
 // Ask user what they would like to do
 function team() {
@@ -90,10 +95,34 @@ function newDepartment() {
                 if (err) {
                     console.log(err);
                 } else {
-                    console.table(results);
+                    console.log(`New department, ${answer.department} was added successfully!`)
+                    team();
                 }
             })
         })
-}
 
-team();
+}
+// async function removeEmployee() {
+//      const employees = await db.findAllEmployees();
+
+//      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+//        name: `${first_name} ${last_name}`,
+//        value: id
+//      }));
+
+//      const { employeeId } = await prompt([
+//        {
+//          type: "list",
+//          name: "employeeId",
+//          message: "Which employee do you want to remove?",
+//          choices: employeeChoices
+//        }
+//      ]);
+
+//      await db.removeEmployee(employeeId);
+
+//      console.log("Removed employee from the database");
+
+//      team();
+//    }
+// team();
