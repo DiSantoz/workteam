@@ -28,7 +28,7 @@ function team() {
             type: 'list',
             name: 'choice',
             message: 'What would you like to do?',
-            choices: ["View all employees", "View all departments", "View all roles", "Add a department", "Add a role", "Add an employee", "Update an employee role"]
+            choices: ["View all employees", "View all departments", "View all roles", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Nothing to change, all done!"]
         }
     ]).then(function (answer) {
         if (answer.choice === 'View all employees') {
@@ -37,8 +37,10 @@ function team() {
             allDepartments();
         } else if (answer.choice === 'View all roles') {
             allRoles();
-        } else if (answer.choice === 'Add a department')
+        } else if (answer.choice === 'Add a department') {
             newDepartment();
+        } else if (answer.choice === 'Add a role')
+            newRole();
     });
 };
 
@@ -96,6 +98,38 @@ function newDepartment() {
                     console.log(err);
                 } else {
                     console.log(`New department, ${answer.department} was added successfully!`)
+                    team();
+                }
+            })
+        })
+
+}
+// add a role
+function newRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'role',
+            message: 'What is the name of the role you would like to add?'
+        },
+        {
+            type: 'input',
+            name: 'salary',
+            message: 'What is the salary for the role you would like to add?'
+        },
+        {
+            type: 'input',
+            name: 'roleID',
+            message: 'What is the department id  for the role you would like to add?'
+        }
+    ])
+        .then(function (answer) {
+            const sql = `INSERT INTO role (title, salary, department_id) VALUES (?,?,?)`;
+            db.query(sql, answer.role, answer.salary, answer.roleID, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(`New role, ${answer.role} was added successfully!`)
                     team();
                 }
             })
