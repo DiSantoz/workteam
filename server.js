@@ -33,20 +33,28 @@ function team() {
     ]).then(function (answer) {
         if (answer.choice === 'View all employees') {
             allEmployees();
+            return
         } else if (answer.choice === 'View all departments') {
             allDepartments();
+            return
         } else if (answer.choice === 'View all roles') {
             allRoles();
+            return
         } else if (answer.choice === 'Add a department') {
             newDepartment();
+            return
         } else if (answer.choice === 'Add a role') {
             newRole();
+            return
         } else if (answer.choice === 'Add an employee') {
             newEmployee();
+            return
         } else if (answer.choice === 'Update an employee role') {
             updateRole();
-        } else if (answer.choice === 'Nothing to change, all done!')
+            return
+        } else (answer.choice === 'Nothing to change, all done!')
             console.log("See you later...");
+            quit();
     });
 };
 
@@ -60,6 +68,7 @@ function allEmployees() {
             console.log(err);
         } else {
             console.table(results);
+            team();
         }
     });
 }
@@ -214,13 +223,13 @@ function updateRole() {
         ])
             .then(function (answer) {
                 const sql = `UPDATE employee SET role_id = ? WHERE first_name =?`;
-                const params = [answer.employeeRole, answer.employeeRole];
+                const params = [answer.employeeRole, answer.employee];
                 console.log(answer.employee, answer.employeeRole);
                 db.query(sql, params, function (err) {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log(`New role, ${answer.first} was added successfully!`)
+                        console.log(`New role, ${answer.employee} was added successfully!`)
                         team();
                     }
                 })
@@ -228,3 +237,6 @@ function updateRole() {
     })
 }
 
+function quit(){
+    process.exit();
+}
