@@ -53,8 +53,8 @@ function team() {
             updateRole();
             return
         } else (answer.choice === 'Nothing to change, all done!')
-            console.log("See you later...");
-            quit();
+        console.log("See you later...");
+        quit();
     });
 };
 
@@ -177,7 +177,7 @@ function newEmployee() {
         {
             type: 'input',
             name: 'manager',
-            message: "What is the employee's manager id?"
+            message: "What is the employees' manager's id?"
         }
     ])
         .then(function (answer) {
@@ -237,6 +237,7 @@ function updateRole() {
     })
 }
 
-function quit(){
+// exit the app
+function quit() {
     process.exit();
 }
