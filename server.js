@@ -30,8 +30,10 @@ function team() {
             allEmployees();
         } else if (answer.choice === 'View all departments') {
             allDepartments();
-        } else if (answer.choice === 'View all roles')
+        } else if (answer.choice === 'View all roles') {
             allRoles();
+        } else if (answer.choice === 'Add a department')
+            newDepartment();
     });
 };
 
@@ -71,6 +73,27 @@ function allRoles() {
             console.table(results);
         }
     });
+}
+
+// add a department
+function newDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'department',
+            message: 'What is the name of the department you would like to add?'
+        }
+    ])
+        .then(function (answer) {
+            const sql = `INSERT INTO department (name) VALUES (?)`;
+            db.query(sql, answer.department, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.table(results);
+                }
+            })
+        })
 }
 
 team();
