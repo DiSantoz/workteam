@@ -62,7 +62,9 @@ function allDepartments() {
 
 // view all roles
 function allRoles() {
-    db.query(`SELECT * FROM role`, function (err, results) {
+    db.query(`SELECT role.title, role.id, department.name , role.salary
+            FROM role
+            INNER JOIN department ON role.department_id = department.id;`, function (err, results) {
         if (err) {
             console.log(err);
         } else {
