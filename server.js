@@ -39,8 +39,14 @@ function team() {
             allRoles();
         } else if (answer.choice === 'Add a department') {
             newDepartment();
-        } else if (answer.choice === 'Add a role')
+        } else if (answer.choice === 'Add a role') {
             newRole();
+        } else if (answer.choice === 'Add an employee') {
+            newEmployee();
+        } else if (answer.choice === 'Update an employee role') {
+            updateRole();
+        } else if (answer.choice === 'Nothing to change, all done!')
+            console.log("See you later...");
     });
 };
 
@@ -65,6 +71,7 @@ function allDepartments() {
             console.log(err);
         } else {
             console.table(results);
+            team();
         }
     });
 }
@@ -78,6 +85,7 @@ function allRoles() {
             console.log(err);
         } else {
             console.table(results);
+            team();
         }
     });
 }
@@ -125,7 +133,9 @@ function newRole() {
     ])
         .then(function (answer) {
             const sql = `INSERT INTO role (title, salary, department_id) VALUES (?,?,?)`;
-            db.query(sql, answer.role, answer.salary, answer.roleID, function (err, results) {
+            const params = [answer.role, answer.salary, answer.roleID];
+
+            db.query(sql, params, function (err, results) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -136,27 +146,85 @@ function newRole() {
         })
 
 }
-// async function removeEmployee() {
-//      const employees = await db.findAllEmployees();
 
-//      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
-//        name: `${first_name} ${last_name}`,
-//        value: id
-//      }));
+// add new employee
+function newEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'first',
+            message: 'What is the first name of the employee you would like to add?'
+        },
+        {
+            type: 'input',
+            name: 'last',
+            message: 'What is the last name of the employee you would like to add?'
+        },
+        {
+            type: 'input',
+            name: 'role',
+            message: 'What role id does this employee belong to?'
+        },
+        {
+            type: 'input',
+            name: 'manager',
+            message: "What is the employee's manager id?"
+        }
+    ])
+        .then(function (answer) {
+            const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?,?,?,?)`;
+            const params = [answer.first, answer.last, answer.role, answer.manager];
 
-//      const { employeeId } = await prompt([
-//        {
-//          type: "list",
-//          name: "employeeId",
-//          message: "Which employee do you want to remove?",
-//          choices: employeeChoices
-//        }
-//      ]);
+            db.query(sql, params, function (err, results) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(`New role, ${answer.first, answer.last} was added successfully!`)
+                    team();
+                }
+            })
+        })
 
-//      await db.removeEmployee(employeeId);
+}
 
-//      console.log("Removed employee from the database");
+// update  employee role
+function updateRole() {
+    const viewEmployees = `SELECT * FROM employee`;
+    const currentEmployee = [];
 
-//      team();
-//    }
-// team();
+    db.query(viewEmployees, function (err, result) {
+        if (err)
+            console.log(err);
+        for (var i = 0; i < result.length; i++) {
+            currentEmployee.push(result[i].first_name)
+        }
+
+        inquirer.prompt([
+            {
+                type: 'list',
+                name: 'employee',
+                message: "Which employee's role would you like to update?",
+                choices: currentEmployee
+            },
+            {
+                type: 'input',
+                name: 'employeeRole',
+                message: "What role would you like to assign this employee?"
+            }
+        ])
+            .then(function (answer) {
+                const sql = `UPDATE employee SET role_id = ? WHERE first_name =?`;
+                const params = [answer.employeeRole, answer.employeeRole];
+                console.log(answer.employee, answer.employeeRole);
+                db.query(sql, params, function (err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(`New role, ${answer.first} was added successfully!`)
+                        team();
+                    }
+                })
+            })
+    })
+}
+
