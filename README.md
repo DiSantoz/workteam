@@ -43,7 +43,7 @@ Workteam is a commandline application that allows business owners to view their 
 
 ## Usage
 
-  Please see attached [video](https://drive.google.com/file/d/1sdfyK7skc6td5pLmPr6qryri4mQ-nlgR/view) on how to use this application!
+  Please see attached [video](https://drive.google.com/file/d/1VjC_D4LAcaBUgLg914W4BIDtODdfJeWf/view?usp=sharing) on how to use this application!
 
   ![alt](./assets/images/show.gif)
 
